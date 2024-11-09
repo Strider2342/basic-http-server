@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include "server-config.c"
+
+#define BUFFER_SIZE 16000
 
 typedef struct
 {
@@ -15,7 +18,7 @@ typedef struct
   int socket;
 } http_client;
 
-http_server* create_server(int port)
+http_server* create_server(server_config *config)
 {
   http_server *server = (http_server *)malloc(sizeof(http_server));
   int socket_option = 1;
@@ -23,7 +26,7 @@ http_server* create_server(int port)
   // address
   server->address.sin_family = AF_INET;
   server->address.sin_addr.s_addr = INADDR_ANY;
-  server->address.sin_port = htons(port);
+  server->address.sin_port = htons(config->port);
   server->address_length = sizeof(server->address);
 
   // create socket

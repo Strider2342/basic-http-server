@@ -2,11 +2,16 @@
 #include <string.h>
 #include <sys/socket.h>
 #include "http-server.c"
+#include "http-request.c"
 #include "http-response.c"
 
 int main()
 {
-  http_server *server = create_server(1234);
+  server_config *config = (server_config *)malloc(sizeof(server_config));
+  config->port = 1234;
+  config->static_dir = "./public";
+
+  http_server *server = create_server(config);
 
   // listening
   if (listen(server->socket, 3) < 0)
@@ -19,14 +24,25 @@ int main()
   {
     http_client *client = accept_client(server);
 
-    char *response = create_response();
+    // parse request
+    char buffer[BUFFER_SIZE] = "";
+    ssize_t bytes_read = read(client->socket, buffer, BUFFER_SIZE - 1);
+
+    http_request *request = parse_http_request(buffer);
+    // print_request(request);
+
+    // create response
+    char *response = build_response(request, config);
 
     send(client->socket, response, strlen(response), 0);
 
+    free(request);
+    free(response);
     destroy_client(client);
   }
 
   destroy_server(server);
+  free(config);
 
   return 0;
 }
