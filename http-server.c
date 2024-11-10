@@ -10,12 +10,12 @@ typedef struct
 {
   int socket;
   struct sockaddr_in address;
-  socklen_t address_length;
 } http_server;
 
 typedef struct
 {
   int socket;
+  struct sockaddr_in address;
 } http_client;
 
 http_server* create_server(server_config *config)
@@ -27,7 +27,7 @@ http_server* create_server(server_config *config)
   server->address.sin_family = AF_INET;
   server->address.sin_addr.s_addr = INADDR_ANY;
   server->address.sin_port = htons(config->port);
-  server->address_length = sizeof(server->address);
+  socklen_t address_length = sizeof(server->address);
 
   // create socket
   if ((server->socket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -44,7 +44,7 @@ http_server* create_server(server_config *config)
   }
 
   // bind server socket to address and port
-  if (bind(server->socket, (struct sockaddr*)&server->address, server->address_length) < 0)
+  if (bind(server->socket, (struct sockaddr*)&server->address, address_length) < 0)
   {
     perror("Binding socket failed");
     exit(EXIT_FAILURE);
@@ -57,10 +57,18 @@ http_client* accept_client(http_server *server)
 {
   http_client *client = (http_client *)malloc(sizeof(http_client));
 
-  if ((client->socket = accept(server->socket, (struct sockaddr*)&server->address, &server->address_length)) < 0)
+  client->address.sin_family = AF_INET;
+  client->address.sin_addr.s_addr = INADDR_ANY;
+  socklen_t address_length = sizeof(client->address);
+
+  if ((client->socket = accept(server->socket, (struct sockaddr*)&client->address, &address_length)) < 0)
   {
     perror("Couldn\'t accept connection");
   }
+
+  // get IP
+  // char *ip;
+  // inet_ntop(AF_INET, &address->sin_addr, ip, INET_ADDRSTRLEN);
 
   return client;
 }
