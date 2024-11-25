@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
-#include "http-server.c"
-#include "http-request.c"
-#include "http-response.c"
+#include "http/server-config.h"
+#include "http/http-server.h"
+#include "http/http-request.h"
+#include "http/http-response.h"
 
 int main()
 {
@@ -29,7 +30,7 @@ int main()
     ssize_t bytes_read = read(client->socket, buffer, BUFFER_SIZE - 1);
 
     http_request *request = parse_http_request(buffer);
-    // print_request(request);
+    print_request(request);
 
     // create response
     char *response = build_response(request, config);

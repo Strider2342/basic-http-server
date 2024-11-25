@@ -1,16 +1,8 @@
-#include "string-util.c"
-
-#define DEFAULT_MIME_TYPE "application/octet-stream"
-
-typedef struct
-{
-  char *method;
-  char *url;
-  char *http_version;
-  char *headers[10]; // supports 10 headers for now
-} http_request;
-
-http_request* parse_http_request(char *original_request_buffer);
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "http-request.h"
+#include "util/string-util.h"
 
 http_request* parse_http_request(char *original_request_buffer)
 {

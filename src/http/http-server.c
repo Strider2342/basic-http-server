@@ -1,22 +1,10 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "server-config.c"
-
-#define BUFFER_SIZE 16000
-
-typedef struct
-{
-  int socket;
-  struct sockaddr_in address;
-} http_server;
-
-typedef struct
-{
-  int socket;
-  struct sockaddr_in address;
-} http_client;
+#include "http-server.h"
+#include "server-config.h"
 
 http_server* create_server(server_config *config)
 {

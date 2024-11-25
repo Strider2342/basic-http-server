@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "file-system-util.c"
-
-char* determine_mime_type(char *url);
-char* set_header(char *headers, char *name, char *value);
-char* get_status_line(int status_code);
-char* build_response(http_request *request, server_config *config);
-char* create_hello_world_response();
+#include "http-request.h"
+#include "http-response.h"
+#include "util/string-util.h"
+#include "os/file-system-util.h"
 
 char* determine_mime_type(char *url)
 {

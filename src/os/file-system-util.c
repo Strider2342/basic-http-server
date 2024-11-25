@@ -1,12 +1,6 @@
 #include <stdio.h>
-
-typedef struct
-{
-  char *content;
-  char *error;
-} load_file_result;
-
-load_file_result* load_file(char *file_path);
+#include <stdlib.h>
+#include "file-system-util.h"
 
 load_file_result* load_file(char *file_path)
 {
